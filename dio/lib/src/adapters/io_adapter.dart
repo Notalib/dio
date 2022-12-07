@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
+
 import '../adapter.dart';
-import '../options.dart';
 import '../dio_error.dart';
+import '../options.dart';
 import '../redirect_record.dart';
 
 typedef OnHttpClientCreate = HttpClient? Function(HttpClient client);
@@ -44,7 +45,6 @@ class DefaultHttpClientAdapter implements HttpClientAdapter {
 
     late HttpClientRequest request;
     try {
-      request = await reqFuture;
       if (options.connectTimeout > 0) {
         request = await reqFuture
             .timeout(Duration(milliseconds: options.connectTimeout));
@@ -173,9 +173,8 @@ class DefaultHttpClientAdapter implements HttpClientAdapter {
         _defaultHttpClient =
             onHttpClientCreate!(_defaultHttpClient!) ?? _defaultHttpClient;
       }
-      _defaultHttpClient!.connectionTimeout = _connectionTimeout;
     }
-    return _defaultHttpClient!;
+    return _defaultHttpClient!..connectionTimeout = _connectionTimeout;
   }
 
   @override
